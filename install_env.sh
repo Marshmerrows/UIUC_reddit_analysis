@@ -1,3 +1,5 @@
+#if you cannot run this as an executable, it means that this file does
+#not have execute permission. Fix this with 'chmod +x install_env.sh'"
 virtualenv env
 source env/bin/activate
 
