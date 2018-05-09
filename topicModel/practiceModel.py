@@ -39,7 +39,12 @@ BoWCorpus = [dataDictionary.doc2bow(document) for document in tokenData]
 
 lda_model = models.LdaModel(BoWCorpus, numTOPICS, dataDictionary)
 
+bow = [dataDictionary.doc2bow(tokenData[0])]
+document = lda_model.get_document_topics(bow)
+
 print "LDA Model"
 
-for i in range(numTOPICS):
-    print("Topic #{}".format(i), lda_model.print_topic(i, 8))
+
+
+for i in range(len(document)):
+    print(document[i])
