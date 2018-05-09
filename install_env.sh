@@ -5,6 +5,8 @@ source env/bin/activate
 
 pip install beautifulsoup4
 pip install selenium
+pip install gensim
+
 
 #!/bin/bash
 # download and install latest geckodriver for linux or mac.
