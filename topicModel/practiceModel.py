@@ -32,7 +32,7 @@ tokenData = []
 for preProsText in data:
     # cleanData(preProsText)
     tokenData.append(cleanData(preProsText))
-
+i
 dataDictionary = corpora.Dictionary(tokenData)
 
 BoWCorpus = [dataDictionary.doc2bow(document) for document in tokenData]
