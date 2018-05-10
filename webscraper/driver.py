@@ -1,10 +1,13 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 from bs4 import BeautifulSoup
+import sys
 
-SAVE_PATH = "../res_all/res2/"
-START_URL = "https://www.reddit.com/r/UIUC/new/"
+#SAVE_PATH = "../res_all/res2/"
+#START_URL = "https://www.reddit.com/r/UIUC/new/"
+
+SAVE_PATH = sys.argv[1]
+START_URL = sys.argv[2]
 postnum = 0
 
 driver = webdriver.Firefox()
