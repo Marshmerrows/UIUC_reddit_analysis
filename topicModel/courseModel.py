@@ -1,10 +1,11 @@
 from nltk.corpus import stopwords
 from nltk.tokenize import RegexpTokenizer
+from shutil import copy
 from gensim import models, corpora
 import re, string, os
 
 TOKENIZER = RegexpTokenizer(r'\w+')
-folder = "../res_all/res2"
+DATA = ["../res_all/res2", "../res_all/res"]
 numTOPICS = 8
 stopWORDS = stopwords.words('english')
 
@@ -44,21 +45,42 @@ def get_topic(data):
 
 COURSE_RE = '[a-z]{2,10} ?[1-5][0-9][0-9]'
 pattern = re.compile(COURSE_RE)
+COUNT = 0
 
-for path,dirs,file in os.walk(folder):
-    print path
-    for document in file:
-        fullname = os.path.abspath(os.path.join(path,document))
-        with open(fullname, 'r') as currFile:
-            data = []
-            for line in currFile.readlines():
-                if line != "----":
-                    data.append(line)
+for folder in DATA:
+    for path,dirs,file in os.walk(folder):
+        print path
+        for document in file:
+            fullname = os.path.abspath(os.path.join(path,document))
+            with open(fullname, 'r') as currFile:
+                data = []
+                for line in currFile.readlines():
+                    if line != "----":
+                        data.append(line)
 
-            data = ' '.join(data)
-            topics = get_topic(data)
-            courses = pattern.findall(topics)
+                data = ' '.join(data)
+                topics = get_topic(data)
+                courses = pattern.findall(topics)
 
-            for course in courses:
-                print fullname
-                print course
+                if not os.path.exists("courses"):
+                    os.makedirs("courses")
+
+
+                currPath = os.path.join(os.getcwd(), 'courses')
+
+                prevdir = os.getcwd()
+                os.chdir(currPath)
+
+
+                for course in courses:
+                    tempPath = ""
+                    tempPath = os.path.join(currPath, course)
+                    tempPath = os.path.join(tempPath,  str(COUNT))
+                    if not os.path.exists(course):
+                        os.makedirs(course)
+                        copy(fullname, tempPath)
+                        COUNT+= 1
+                    else:
+                        copy(fullname, tempPath)
+                        COUNT+=1
+                os.chdir(prevdir)
