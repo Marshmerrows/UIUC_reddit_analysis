@@ -3,19 +3,20 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 from bs4 import BeautifulSoup
 
-driver = webdriver.Firefox()
-driver.get("https://www.reddit.com/r/UIUC/")
+SAVE_PATH = "../res_all/res2/"
+START_URL = "https://www.reddit.com/r/UIUC/new/"
 postnum = 0
+
+driver = webdriver.Firefox()
+driver.get(START_URL)
 
 while True:
     for button in driver.find_elements_by_tag_name('button'): # this finds the "old reddit" button
         if button.get_attribute('innerHTML') == 'back to Old Reddit.':
             button.click()
             break
-
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     # find the next button real quick :D
-
     next_href = None
     next_span = soup.find('span', class_='next-button')
     if next_span:
@@ -24,7 +25,14 @@ while True:
             print ">:("
             next_href = next_span['href']
 
+    # find the main part of the page (get rid of annoying banner posts every time)
     print next_href
+    site_table = soup.find('div', id='siteTable')
+    if site_table:
+        soup = site_table
+        print "siteTable found"
+    else:
+        print "siteTable not found"
 
     for link in soup.find_all('a'):  # find all links on the current webpage, in order to filter
         href = str(link.get('href'))
@@ -32,7 +40,7 @@ while True:
         if len(href_parts) > 6 and href_parts[5] == 'comments':  # this link follows a post to its comment section
             driver.get(href)
 
-            f = open("../res/file{}".format(postnum), "w+")
+            f = open(SAVE_PATH + "file{}".format(postnum), "w+")
             print "writing to {}".format(f.name)
             postnum += 1
 
@@ -46,10 +54,10 @@ while True:
                     try:
                         anchor = morecomments.find_element_by_tag_name('a')
                         anchor.click()
-                    except NoSuchElementException:
-                        print ':P'
-            except NoSuchElementException:
-                print ':P'
+                    except:
+                        print "Error in Morecomments??"
+            except:
+                print "Error in Morecomments??"
 
             thread_soup = BeautifulSoup(driver.page_source, 'html.parser')
 
@@ -99,4 +107,4 @@ while True:
     else:
         break
 
-driver.quit()
+#driver.quit()
