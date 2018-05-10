@@ -7,7 +7,7 @@ TOKENIZER = RegexpTokenizer(r'\w+')
 
 folder = "testData"
 data = []
-
+someNonSense = 43
 for path,dirs,file in os.walk(folder):
     for document in file:
         fullname = os.path.abspath(os.path.join(path,document))
