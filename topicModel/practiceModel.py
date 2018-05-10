@@ -44,7 +44,5 @@ document = lda_model.get_document_topics(bow)
 
 print "LDA Model"
 
-
-
-for i in range(len(document)):
-    print(document[i])
+for i in range(numTOPICS):
+    print("Topic #{}".format(i) + lda_model.print_topic(idx, numTOPICS))
