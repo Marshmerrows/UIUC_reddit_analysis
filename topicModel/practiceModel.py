@@ -32,7 +32,7 @@ tokenData = []
 for preProsText in data:
     # cleanData(preProsText)
     tokenData.append(cleanData(preProsText))
-i
+
 dataDictionary = corpora.Dictionary(tokenData)
 
 BoWCorpus = [dataDictionary.doc2bow(document) for document in tokenData]
@@ -45,4 +45,4 @@ document = lda_model.get_document_topics(bow)
 print "LDA Model"
 
 for i in range(numTOPICS):
-    print("Topic #{}".format(i) + lda_model.print_topic(idx, numTOPICS))
+    print("Topic #{}".format(i) + lda_model.print_topic(i, numTOPICS))
