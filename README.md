@@ -21,12 +21,7 @@ courses here at UIUC.
 #### topicModel
 
 To run: "python courseModel.py"
-
-##### courses
-
-Folder including all the UIUC Reddit course data after being separated by the topic modeler.
-Inside every course that has data on it has its own folder including its comments.
-
+    -This script assumes that proper folders [res1, res2] in the res_all folder (in the main directory)
 
 #### webscraper
 
@@ -35,3 +30,9 @@ To run: "python driver.py {Save path for scraped data} {URL of Reddit page to sc
 Creates directory where scraped data will be saved to
 
 #### sentimentClassification
+
+assumes a folder 'courses' exists, which contains 1 folder for each course that we are trying to classify.
+The script 'get_features.py' finds relevant sentiment words, from a file in the 'res' folder, NRC_Emotion.txt
+'classify.py' then creates and saves a naive bayes classifier as a pickle. We then use that pickle in 
+'apply_model.py' to well, apply the created model to the data in courses, outputting a 'final.csv' in res, that
+contains each course, followed by its ranking (more negative or more positive)
