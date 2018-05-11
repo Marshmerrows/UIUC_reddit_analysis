@@ -1,7 +1,8 @@
 from nltk.corpus import movie_reviews
 from random import randint
 import nltk.classify.util
-from nltk.classify import NaiveBayesClassifier
+from nltk.metrics.scores import (precision, recall)
+import collections
 import pickle
 
 featureset = [word.strip() for word in open('res/featureset', 'r').readlines()]
@@ -32,7 +33,7 @@ for files, label in [(movie_reviews.fileids('neg'), 0), (movie_reviews.fileids('
 
 train = []
 test = []
-
+#only for testing, real model will make use of all the data
 for review in reviews: # split into train and test data randomly, 20% of data goes to test
     randnum = randint(0, 100)
     if randnum > 80:
@@ -42,16 +43,28 @@ for review in reviews: # split into train and test data randomly, 20% of data go
 
 print "classifying.........."
 try:
-    old_class = open("res/old_class.pickle", "rb")
+    old_class = open("res/bayes_classifier_test.pickle", "rb")
     classifier = pickle.load(old_class)
     classifier.train(train)
     old_class.close()
 except IOError:
     classifier = nltk.NaiveBayesClassifier.train(train)
 
-print nltk.classify.accuracy(classifier, test)
+observed_test = collections.defaultdict(set)
+reference_test = collections.defaultdict(set)
+for i, (features, label) in enumerate(test):
+    reference_test[label].add(i)
+    val = classifier.classify(features)
+    observed_test[val].add(i)
+
+print 'accuracy: {}'.format(nltk.classify.accuracy(classifier, test))
+print 'recall pos: {}'.format(recall(observed_test[1], reference_test[1]))
+print 'precision pos: {}'.format(precision(observed_test[1], reference_test[1]))
+print 'recall neg: {}'.format(precision(observed_test[0], reference_test[0]))
+print 'precision neg: {}'.format(precision(observed_test[0], reference_test[0]))
+
 
 print "saving..............."
-new_class = open("res/bayes_classifier.pickle", "wb+")
+new_class = open("res/bayes_classifier_test.pickle", "wb+")
 pickle.dump(classifier, new_class)
 new_class.close()
